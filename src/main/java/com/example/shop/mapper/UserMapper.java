@@ -14,7 +14,6 @@ public interface UserMapper {
 
     int deleteUser(String  username); //삭제
 
-    List<UserDto>findAll(); //전체조회
 
 
 }
