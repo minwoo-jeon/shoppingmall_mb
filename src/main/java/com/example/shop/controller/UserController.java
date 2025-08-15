@@ -1,9 +1,15 @@
 package com.example.shop.controller;
 
 
+import com.example.shop.domain.UserDto;
 import com.example.shop.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,22 +19,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 
-    private final  UserService userService;
+    private final UserService userService;
 
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-//    @PostMapping("/join")
-//    public ResponseEntity<String> processJoin(UserDto userDto, Model model) {
-//        //일단 회원이 존재하는지 찾는다
-//        String userEmail = userService.findByEmail(userDto.getEmail());
-//        if(userEmail != null){
-//            System.out.println(" 이미 존재하는 회원입니다");
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 회원입니다");
-//        }
-//        //없을경우 저장
-//        userService.save(userDto);
-//        return ResponseEntity.ok("회원가입 성공");
-//    }
+    @PostMapping
+    public ResponseEntity<String> signUp(@RequestBody UserDto userDto) {
+            try {
+                userService.signup(userDto);
+                return new ResponseEntity<>("회원가입 성공",HttpStatus.CREATED);
+            }catch (IllegalStateException e) {
+                //이미 존재하는 아이디가 있을경우
+                e.printStackTrace();
+                return new ResponseEntity<>("이미 존재하는 회원입니다",HttpStatus.CONFLICT);
+            }catch (Exception e){
+                //서버 내부 오류
+                return new ResponseEntity<>("서버오류",HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+    }
 }

@@ -19,7 +19,7 @@ public class UserService {
     }
 
     //회원가입
-    public void signup(UserDto user){
+    public int signup(UserDto user){
         
         //1. 중복체크 (예: 회원이이디)
         if (mapper.findById(user.getUsername()) != null) {
@@ -30,7 +30,7 @@ public class UserService {
         user.setPassword(encodePassword);
 
         //3. 회원 저장
-        mapper.insertUser(user);
+        return mapper.insertUser(user);
     }
 
 
