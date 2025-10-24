@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.shop.mapper.PaymentMapper">
+
+    <insert id="insertPaymentLog" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        insert into payment_logs (order_id,status)
+        values(#{orderId},#{status})
+    </insert>
+
+    <select id="selectPaymentLogByOrderId"  parameterType="long" resultType="paymentDto">
+        select *
+        from payment_logs
+        where order_id = #{orderId}
+        order by log_time desc
+    </select>
+
+
+</mapper>

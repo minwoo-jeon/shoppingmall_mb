@@ -12,15 +12,17 @@ public class UserDto {
         private String email;
         private Date created_at;
         private Date updated_at;
+        private String role;
 
         public UserDto() {
         }
 
-        public UserDto(String username, String name, String password, String email) {
+        public UserDto(String username, String name, String password, String email,String role) {
             this.username = username;
             this.name = name;
             this.password = password;
             this.email = email;
+            this.role = role;
         }
     }
 

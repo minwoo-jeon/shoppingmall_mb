@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.shop.mapper.OrderMapper">
+
+    <!-- 주문 생성 -->
+    <insert id="insertOrder"  parameterType="OrderDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (user_id,cart_id, status, total_price)
+        VALUES (#{userId}, #{cartId}, #{status} , #{totalPrice})
+    </insert>
+
+    <!-- 주문 상세 저장-->
+    <insert id="insertOrderItem" parameterType="OrderItemDto" useGeneratedKeys="true">
+        INSERT INTO orders_details (quantity,order_id,product_id,product_name,price)
+        VALUES(#{quantity}, #{orderId}, #{productId}, #{productName}, #{price})
+    </insert>
+
+    <!-- 특정 유저 주문 목록-->
+    <select id="selectOrdersByUser" parameterType="long" resultType="OrderDTO">
+        SELECT * FROM orders WHERE user_id = #{userId} order by order_date DESC
+    </select>
+
+
+    <resultMap id="OrderWithItemsMap" type="OrderDto">
+        <id property="id" column="order_id"/>
+        <result property="orderDate" column="order_date" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+        <result property="userId" column="user_id"/>
+        <result property="cartId" column="cart_id"/>
+        <result property="status" column="status"/>
+        <result property="totalPrice" column="total_price"/>
+        <collection property="items" ofType="OrderItemDto">
+            <id property="id" column="order_item_id"/>
+            <result property="quantity" column="quantity"/>
+            <result property="orderId" column="order_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="productName" column="product_name"/>
+            <result property="price" column="price"/>
+        </collection>
+    </resultMap>
+
+    <!-- 주문 상세 조회 -->
+    <select id="selectOrderDetail" resultMap="OrderWithItemsMap" >
+        SELECT
+        o.id AS order_id,
+        o.user_id,
+        o.cart_id,
+        o.status,
+        o.total_price,
+        o.order_date,
+        od.id AS order_item_id,
+        od.quantity,
+        od.product_id,
+        od.product_name,
+        od.price
+        FROM orders o
+        JOIN orders_details od on o.id = od.order_id
+        WHERE o.id = #{orderId}
+    </select>
+
+    <!-- 주문 취소 -->
+    <update id="cancelOrder" parameterType="Long">
+        update orders set status = "CANCEL"
+        where id = #{orderId}
+    </update>
+
+
+
+
+
+
+
+
+
+</mapper>

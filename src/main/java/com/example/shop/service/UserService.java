@@ -2,6 +2,7 @@ package com.example.shop.service;
 
 import com.example.shop.domain.UserDto;
 import com.example.shop.mapper.UserMapper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,8 @@ public class UserService {
 
 
     //회원 상세정보 정보 조회
-    public UserDto findById(String username){
+    public UserDto findById(String username) {
+
         return mapper.findById(username);
     }
 

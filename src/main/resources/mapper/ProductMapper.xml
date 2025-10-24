@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.shop.mapper.ProductMapper">
+
+<insert id="insertProduct" parameterType="ProductDto" useGeneratedKeys="true" keyProperty="id">
+    insert into products (product_name,price,description,product_img,stock)
+    values(#{productName},#{price},#{description}, #{productImg}, #{stock})
+</insert>
+
+<select id="readProductById" parameterType="Long" >
+    select * from products where id = #{productId}
+</select>
+
+<select id="findByProductName" parameterType="String">
+    select * from products where product_name = #{productName}
+</select>
+
+    <select id="existById" parameterType="Long" resultType="boolean">
+        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+        FROM products
+        WHERE id = #{productId}
+    </select>
+
+<select id="getAllProduct" resultType="ProductDto">
+    select * from products
+</select>
+
+
+<delete id="deleteProduct" parameterType="Long">
+    delete from products where id = #{productId}
+</delete>
+
+ <delete id="deleteAll">
+     delete from products;
+ </delete>
+
+<!--제고 차감-->
+ <update id="decreaseStock" parameterType="map">
+     update products
+     set stock = stock - #{stockNum}
+     where id = #{productId} AND stock >= #{stockNum}
+ </update>
+
+<!--재고 수정-->
+    <update id="changeStock" parameterType="map">
+        update products
+        set stock = stock + #{stockNum}
+        where id = #{productId}
+    </update>
+
+
+
+ <update id="updateProduct" parameterType="ProductDto">
+     update products
+     set product_name = #{productName} ,
+         price = #{price},
+        description = #{description},
+        product_img = #{productImg},
+        stock = #{stock}
+     where id = #{id}
+ </update>
+
+
+
+</mapper>

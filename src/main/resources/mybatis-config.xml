@@ -2,9 +2,24 @@
 <!DOCTYPE configuration
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
 <configuration>
+
+
+    <settings>
+        <!-- DB 컬럼명 product_name → DTO 필드 productName 자동 매핑 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
     <typeAliases>
+        <typeAlias alias="paymentDto" type="com.example.shop.domain.PaymentDto"/>
+        <typeAlias alias="OrderDto" type="com.example.shop.domain.OrderDto"/>
+        <typeAlias alias="OrderItemDto" type="com.example.shop.domain.OrderItemDto"/>
         <typeAlias alias="UserDto" type="com.example.shop.domain.UserDto"/>
+        <typeAlias alias="ProductDto" type="com.example.shop.domain.ProductDto"/>
+        <typeAlias alias="CartDto" type="com.example.shop.domain.CartDto"/>
+        <typeAlias alias="CartItemDto" type="com.example.shop.domain.CartItemDto"/>
     </typeAliases>
+
 
 </configuration>

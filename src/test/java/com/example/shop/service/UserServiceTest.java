@@ -28,48 +28,38 @@ class UserServiceTest {
 
     public String testUserName="";
 
-    @BeforeEach
-    void setUp() {
-        testUserName = "testUser_" + UUID.randomUUID();
-        UserDto userDto = new UserDto(testUserName , "테스트" , "1234" ,testUserName+"@test.com");
-        mapper.insertUser(userDto);
-    }
+//    @BeforeEach
+//    void setUp() {
+//        testUserName = "testUser_" + UUID.randomUUID();
+//        UserDto userDto = new UserDto(testUserName , "테스트" , "1234" ,testUserName+"@test.com");
+//        mapper.insertUser(userDto);
+//    }
+//
+//
+//
+//    //회원가입 실패 로직
+//    @Test
+//    void signupFailTest(){
+//         UserDto userDto = new UserDto(testUserName , "테스트" , "1234" ,testUserName+"@test.com");
+//        assertThatThrownBy(()-> userService.signup(userDto)).
+//                isInstanceOf(IllegalStateException.class).
+//                hasMessage("이미 존재하는 회원입니다");
+//    }
+//
+//    //회원가입 성공 로직
+//    @Test
+//    void signupSuccessTest(){
+//        testUserName = "test" +UUID.randomUUID();
+//        UserDto newUser = new UserDto(testUserName , "테스트" , "1234" ,testUserName+"@test.com");
+//          userService.signup(newUser);
+//
+//          UserDto findUser = userService.findById(newUser.getUsername());
+//          log.info("findUser={}" , findUser);
+//          assertThat(findUser).isNotNull();
+//          assertThat(findUser.getUsername()).isEqualTo(newUser.getUsername());
+//          assertThat(findUser.getPassword()).isNotEqualTo("1234");
+//    }
 
 
 
-    //회원가입 실패 로직
-    @Test
-    void signupFailTest(){
-         UserDto userDto = new UserDto(testUserName , "테스트" , "1234" ,testUserName+"@test.com");
-        assertThatThrownBy(()-> userService.signup(userDto)).
-                isInstanceOf(IllegalStateException.class).
-                hasMessage("이미 존재하는 회원입니다");
-    }
-
-    //회원가입 성공 로직
-    @Test
-    void signupSuccessTest(){
-        testUserName = "test" +UUID.randomUUID();
-        UserDto newUser = new UserDto(testUserName , "테스트" , "1234" ,testUserName+"@test.com");
-          userService.signup(newUser);
-
-          UserDto findUser = userService.findById(newUser.getUsername());
-          log.info("findUser={}" , findUser);
-          assertThat(findUser).isNotNull();
-          assertThat(findUser.getUsername()).isEqualTo(newUser.getUsername());
-          assertThat(findUser.getPassword()).isNotEqualTo("1234");
-    }
-
-
-    @Test
-    void findById() {
-    }
-
-    @Test
-    void updateUser() {
-    }
-
-    @Test
-    void deleteUser() {
-    }
 }

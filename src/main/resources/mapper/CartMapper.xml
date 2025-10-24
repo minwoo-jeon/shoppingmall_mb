@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.shop.mapper.CartMapper">
+
+   <!--단순 장바구니가 조회하는지 -->
+  <select id="selectCartByUserId" parameterType="Long">
+      select * from carts where user_id = #{userId}
+  </select>
+
+   <!--회원 장바구니의 아이템 상품들 조회 -->
+ <select id="selectCartItemByUserId" resultMap="cartWithItems">
+     select
+     c.id as cart_id,
+     c.user_id as user_id,
+     ci.id as cart_item_id,
+     ci.quantity,
+     ci.cart_id,
+     p.id as product_id,
+     p.product_name,
+     p.price,
+     p.description,
+     p.product_img,
+     p.stock
+     from carts_items ci
+     join carts c on ci.cart_id = c.id
+     join products p on ci.product_id = p.id
+     where c.user_id = #{userId}
+ </select>
+
+
+    <resultMap id="cartWithItems" type="CartDto">
+        <!-- CartDto 매핑 -->
+        <id property="id" column="cart_id"/>
+        <result property="userId" column="user_id"/>
+
+        <!-- CartDto.items =  List<CartItemDto> -->
+        <collection property="items" ofType="CartItemDto">
+            <id property="id" column="cart_item_id"/>
+            <result property="quantity" column="quantity"/>
+            <result property="cartId" column="cart_id"/>
+            <result property="productId" column="product_id"/>
+
+
+            <!-- CartItemDto.product 매핑 -->
+            <association property="product" javaType="ProductDto">
+                <id property="id" column="product_id"/>
+                <result property="productName" column="product_name"/>
+                <result property="price" column="price"/>
+                <result property="description" column="description"/>
+                <result property="productImg" column="product_img"/>
+                <result property="stock" column="stock"/>
+            </association>
+        </collection>
+    </resultMap>
+
+
+
+
+ <insert id="insertCart">
+     insert into carts (user_id) values (#{userId})
+ </insert>
+
+  <select id="selectCartItem" resultType="CartItemDto">
+        select * from carts_items where cart_id = #{cartId} AND product_id = #{productId}
+  </select>
+
+   <insert id="insertCartItem">
+       insert into carts_items (quantity,cart_id,product_id) values (#{quantity},#{cartId},#{productId})
+   </insert>
+
+    <update id="updateCartItem">
+        update carts_items set quantity = quantity + #{quantity}
+         where cart_id = #{cartId}
+         AND
+        product_id = #{productId}
+    </update>
+
+    <delete id="deleteCartItem">
+        delete from carts_items where cart_id = #{cartId}
+        AND
+        product_id = #{productId}
+    </delete>
+
+
+
+    <select id="selectProductById" resultType="ProductDto">
+        select * from products where id = #{productId}
+    </select>
+</mapper>

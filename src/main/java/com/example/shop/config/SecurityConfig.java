@@ -2,6 +2,8 @@ package com.example.shop.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,15 +18,28 @@ public class SecurityConfig  {
     public PasswordEncoder passwordEncoder(){
         return  new BCryptPasswordEncoder();
     }
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // 람다 방식으로 disable
+
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/api/users/join","/api/users/login","/api/products/*","/api/products",
+                                "/api/cart/**","/api/orders/**","/api/orders").permitAll()
                         .anyRequest().authenticated()
                 );
+
+        http
+                .httpBasic(basic -> basic.disable())
+                .formLogin(form -> form.disable())//rest라서 기본 폼 로그인 비활성화
+                .csrf(csrf -> csrf.disable()); // 람다 방식으로 disable
+
         return http.build();
     }
 }

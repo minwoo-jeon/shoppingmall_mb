@@ -25,7 +25,7 @@ class UserMapperTest {
     @BeforeEach
     void setUp(){
         testUsername = "testUser_" + UUID.randomUUID();
-        UserDto userDto = new UserDto(testUsername , "테스트" , "1234" ,testUsername+"@test.com");
+        UserDto userDto = new UserDto(testUsername , "테스트" , "1234" ,testUsername+"@test.com","user");
         userMapper.insertUser(userDto);
     }
 
@@ -33,7 +33,7 @@ class UserMapperTest {
     @Test
     void insertUserTest() {
             String username = "insertUser+" + UUID.randomUUID();
-            UserDto user = new UserDto(username,"이름","pw",username+"@email.cm");
+            UserDto user = new UserDto(username,"이름","pw",username+"@email.cm","user");
             assertEquals(1,userMapper.insertUser(user));
         }
 
