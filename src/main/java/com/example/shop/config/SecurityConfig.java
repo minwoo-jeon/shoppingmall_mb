@@ -30,9 +30,7 @@ public class SecurityConfig  {
 
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/join","/api/users/login","/api/products/*","/api/products",
-                                "/api/cart/**","/api/orders/**","/api/orders").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 );
 
         http
