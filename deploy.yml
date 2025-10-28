@@ -1,0 +1,44 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ "main" ]  # main 브랜치에 push될 때 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2️⃣ gradlew 실행 권한 부여
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # 3️⃣ 빌드 (Gradle)
+      - name: Build Spring Boot
+        run: ./gradlew clean build -x test
+
+      # 4️⃣ EC2로 jar 업로드
+      - name: Upload jar to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          source: "build/libs/*.jar"
+          target: "~/app"
+
+      # 5️⃣ EC2에서 기존 앱 종료 + 새 jar 실행
+      - name: Restart Spring Boot on EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            pkill -f 'java -jar' || true
+            nohup java -jar ~/app/*.jar > ~/app/log.out 2>&1 &
+
