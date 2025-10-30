@@ -43,7 +43,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/app/app.jar"
+          target: "/home/ubuntu/app"
 
 
 
