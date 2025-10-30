@@ -39,7 +39,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: "build/libs/*.jar"
-          target: "~/app/app.jar"
+          target: "/home/ubuntu/app"
 
       # 5️⃣ EC2에 접속해 서버 재시작
       - name: Deploy and restart app on EC2
@@ -53,6 +53,6 @@ jobs:
             pkill -f 'java -jar' || true
 
             echo "✅ 새 애플리케이션 실행 중..."
-            nohup java -jar ~/app/app.jar > ~/app/log.out 2>&1 &
+            nohup java -jar ~/app/*.jar > ~/app/log.out 2>&1 &
 
             echo "✅ 배포 완료!"
