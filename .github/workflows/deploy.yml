@@ -2,7 +2,6 @@ name: Deploy Spring Boot to EC2
 
 on:
   push:
-
     branches: [ "main" ]
 
 jobs:
@@ -21,21 +20,15 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-
-      # 3. gradlew 실행 권한 부여
+      # 3️⃣ gradlew 실행 권한 부여
       - name: Grant execute permission
         run: chmod +x ./gradlew
 
-
-      # 3️⃣ Gradle 빌드
+      # 4️⃣ Gradle 빌드
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      # 5️⃣ 빌드 확인
-      - name: List build artifacts
-        run: ls -l build/libs/
-
-      # 4️⃣ 빌드된 JAR EC2로 전송
+      # 5️⃣ 빌드된 JAR EC2로 전송
       - name: Upload jar to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -43,11 +36,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/app"
+          target: "/home/ubuntu/app/"   # 디렉토리로 지정
 
-
-
-      # 5️⃣ EC2에 접속해 서버 재시작
+      # 6️⃣ EC2에 접속해 서버 재시작
       - name: Deploy and restart app on EC2
         uses: appleboy/ssh-action@v0.1.10
         with:
@@ -58,7 +49,9 @@ jobs:
             echo "✅ 기존 애플리케이션 종료 중..."
             pkill -f 'java -jar' || true
 
-            echo "✅ 새 애플리케이션 실행 중..."
-            nohup java -jar /home/ubuntu/app/app.jar > /home/ubuntu/app/log.out 2>&1 &
+            # 실제 JAR 파일 이름 확인 후 실행
+            JAR_FILE=$(ls /home/ubuntu/app/*.jar | head -n 1)
+            echo "✅ 새 애플리케이션 실행 중: $JAR_FILE"
+            nohup java -jar "$JAR_FILE" > /home/ubuntu/app/log.out 2>&1 &
 
             echo "✅ 배포 완료!"
