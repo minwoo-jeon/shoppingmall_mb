@@ -30,7 +30,7 @@ jobs:
 
       # 5️⃣ 빌드된 JAR EC2로 전송
       - name: Upload jar to EC2
-        uses: appleboy/scp-action@v0.1.8
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
