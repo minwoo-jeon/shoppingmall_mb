@@ -48,7 +48,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            echo "✅ 기존 애플리케이션 종료 중..."
+            echo "✅ 기존 애플리케이션 종료 중.s.."
             pkill -f 'java -jar' || true
 
             # 실제 JAR 파일 이름 확인 후 실행
