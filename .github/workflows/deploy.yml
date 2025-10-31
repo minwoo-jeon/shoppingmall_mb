@@ -28,32 +28,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-
-      # 5️⃣ 빌드된 JAR EC2로 전송
-      - name: Upload jar to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: "build/libs/shop-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/app/"   # 디렉토리로 지정
-          use_tar: false
-
-      # 6️⃣ EC2에 접속해 서버 재시작
-      - name: Deploy and restart app on EC2
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
-          script: |
-            echo "✅ 기존 애플리케이션 종료 중..."
-            pkill -f 'java -jar' || true
-
-            # 실제 JAR 파일 이름 확인 후 실행
-            JAR_FILE=$(ls /home/ubuntu/app/*.jar | head -n 1)
-            echo "✅ 새 애플리케이션 실행 중: $JAR_FILE"
-            nohup java -jar "$JAR_FILE" > /home/ubuntu/app/log.out 2>&1 &
-
-            echo "✅ 배포 완료!"
+      # 5️⃣ rsync로 빌드된 JAR EC2로 전송 (압축 없이 단일 파일 전송)
+      - name: Copy jar to EC2 with rsync
+        run: |
+          rsync -avz -e "ssh -i ${{ secrets.EC2_PRIVATE_KEY }}" build/libs/shop-0.0.1-SNAPSHOT.jar ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/app/
