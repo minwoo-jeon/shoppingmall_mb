@@ -52,7 +52,7 @@ jobs:
             pkill -f 'java -jar' || true
 
             # 실제 JAR 파일 이름 확인 후 실행
-            JAR_FILE=$(ls /home/ubuntu/app/*.jar | head -n 1)
+            JAR_FILE=$(ls /home/ubuntu/app/libs/*.jar | head -n 1)
             echo "✅ 새 애플리케이션 실행 중: $JAR_FILE"
             nohup java -jar "$JAR_FILE" > /home/ubuntu/app/log.out 2>&1 &
 
