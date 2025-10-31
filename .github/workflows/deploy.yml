@@ -28,9 +28,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
-      # 4.1️⃣ 빌드 산출물 확인 (추가)
-      - name: Verify built files
-        run: ls -l build/libs/
 
       # 5️⃣ 빌드된 JAR EC2로 전송
       - name: Upload jar to EC2
@@ -39,7 +36,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          source: "build/libs/app.jar"
+          source: "build/libs/shop-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/app/"   # 디렉토리로 지정
 
       # 6️⃣ EC2에 접속해 서버 재시작
