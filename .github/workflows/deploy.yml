@@ -28,6 +28,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build -x test
 
+      # 빌드 잘되는지
+      - name: Check generated jar files
+        run: ls -la build/libs
+
 
       # 5️⃣ 빌드된 JAR EC2로 전송
       - name: Upload jar to EC2
