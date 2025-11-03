@@ -54,10 +54,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            echo "✅ 기존 애플리케이션 종료 중..."
-            pkill -f 'java -jar' || true
-            
-            
+            # systemd로 앱 재시작
             if sudo systemctl restart shop; then
               echo "✅ 배포 완료!"
             else
