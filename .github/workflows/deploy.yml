@@ -56,7 +56,10 @@ jobs:
           script: |
             echo "✅ 기존 애플리케이션 종료 중..."
             pkill -f 'java -jar' || true
-
-           
-            sudo systemctl restart shop
-            echo "✅ 배포 완료!"
+            
+            
+            if sudo systemctl restart shop; then
+              echo "✅ 배포 완료!"
+            else
+             echo "⚠️ systemd 재시작 실패"
+            fi
