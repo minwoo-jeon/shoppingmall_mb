@@ -62,5 +62,6 @@ jobs:
             echo "✅ 새 애플리케이션 실행 중: $JAR_FILE"
             nohup java -jar "$JAR_FILE" > /home/ubuntu/app/log.out 2>&1 & disown
 
-
-            echo "✅ 배포 완료!"
+              sleep 3
+              pgrep -f "java -jar" && echo "✅ 실행 성공!" || echo "❌ 실행 실패!
+            
