@@ -71,4 +71,4 @@ jobs:
             echo "❌ 실행 실패! 로그 확인:"
             tail -n 20 "$LOG_FILE" || true
             fi
-           '
+            '
