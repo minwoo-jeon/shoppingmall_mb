@@ -54,14 +54,21 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
+            bash -lc '
             echo "✅ 기존 애플리케이션 종료 중..."
-            pkill -f 'java -jar' || true
-
-            # 실제 JAR 파일 이름 확인 후 실행
+            pkill -f "java -jar" || true
+    
             JAR_FILE="/home/ubuntu/app/shop-0.0.1-SNAPSHOT.jar"
+            LOG_FILE="/home/ubuntu/app/log.out"
+    
             echo "✅ 새 애플리케이션 실행 중: $JAR_FILE"
-            nohup java -jar "$JAR_FILE" > /home/ubuntu/app/log.out 2>&1 & disown
-
-              sleep 3
-              pgrep -f "java -jar" && echo "✅ 실행 성공!" || echo "❌ 실행 실패!
-            
+            nohup /usr/bin/java -jar "$JAR_FILE" > "$LOG_FILE" 2>&1 &
+    
+            sleep 3
+            if pgrep -f "java -jar" > /dev/null; then
+            echo "✅ 실행 성공!"
+            else
+            echo "❌ 실행 실패! 로그 확인:"
+            tail -n 20 "$LOG_FILE" || true
+            fi
+           '
