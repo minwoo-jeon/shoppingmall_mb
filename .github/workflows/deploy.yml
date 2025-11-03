@@ -58,7 +58,5 @@ jobs:
             pkill -f 'java -jar' || true
 
            
-            nohup java -jar "/home/ubuntu/app/shop-0.0.1-SNAPSHOT.jar" > app.log 2>&1 & disown
-       
-            
+            sudo systemctl restart shop
             echo "✅ 배포 완료!"
