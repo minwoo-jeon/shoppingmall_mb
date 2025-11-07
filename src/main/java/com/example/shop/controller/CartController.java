@@ -50,5 +50,13 @@ public class CartController {
 
 
     //사용자 장바구니 삭제
+//    @DeleteMapping("/{userId}/items")
+//    public ResponseEntity<?> deleteCartItems(@PathVariable("userId") Long userId ){
+//
+//        List<CartDto>  items  = cartService.removeCartItem(userId);
+//
+//        return new ResponseEntity<>(items, HttpStatus.OK); // 정상 조회 시 200 반환
+//    }
+
 
 }
